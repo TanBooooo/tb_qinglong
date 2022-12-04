@@ -5,14 +5,14 @@ new Env('StarNetwork养号')
 
 import hashlib
 import logging
-import os
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 
 import requests
 
-from common_util import load_file, pushplus_send, get_thread_number
+from utils.common_util import load_file, get_thread_number
+from notify import send
 
 file_name = 'StarNetwork'
 thread_name = 'Star_ThreadNum'
@@ -120,6 +120,5 @@ if __name__ == '__main__':
 
     logger.info('总计成功数: {}'.format(success_count))
     logger.info('总计失败数: {}'.format(error_count))
-    if "PUSH_PLUS_TOKEN" in os.environ and len(os.environ["PUSH_PLUS_TOKEN"]) > 1:
-        pushplus_send(application_name, '总计成功数: {}\n总计失败数: {}'.format(success_count, error_count),
-                      os.environ["PUSH_PLUS_TOKEN"])
+
+    send(application_name, '总计成功数: {}\n总计失败数: {}'.format(success_count, error_count))

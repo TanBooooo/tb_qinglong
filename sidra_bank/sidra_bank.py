@@ -4,13 +4,13 @@ new Env('SidraBank养号')
 """
 
 import logging
-import os
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
 import requests
 
-from common_util import load_file, get_thread_number, pushplus_send
+from notify import send
+from utils.common_util import load_file, get_thread_number
 
 file_name = 'SidraBank'
 thread_name = 'Sidra_ThreadNum'
@@ -113,6 +113,4 @@ if __name__ == '__main__':
 
     logger.info('总计成功数: {}'.format(success_count))
     logger.info('总计失败数: {}'.format(error_count))
-    if "PUSH_PLUS_TOKEN" in os.environ and len(os.environ["PUSH_PLUS_TOKEN"]) > 1:
-        pushplus_send(application_name, '总计成功数: {}\n总计失败数: {}'.format(success_count, error_count),
-                      os.environ["PUSH_PLUS_TOKEN"])
+    send(application_name, '总计成功数: {}\n总计失败数: {}'.format(success_count, error_count))
