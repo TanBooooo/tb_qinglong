@@ -90,6 +90,8 @@ if __name__ == '__main__':
     thread_num = get_thread_number(thread_name)
     if thread_num > len(lines):
         thread_num = len(lines)
+    if thread_num < 1:
+        thread_num = 1
 
     lock = threading.RLock()
     pool = ThreadPoolExecutor(max_workers=thread_num)
