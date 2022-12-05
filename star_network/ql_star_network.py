@@ -69,10 +69,15 @@ class StarNetwork(object):
         return res.text.count('endAt') > 0
 
     def draw(self):
-        res = requests.get('https://api.starnetwork.io/v3/user/checkin', headers=self.headers)
+        res = requests.post('https://api.starnetwork.io/v3/user/checkin', headers=self.headers)
         # logger.error(res.text)
         res = requests.get('https://api.starnetwork.io/v3/libra/draw', headers=self.headers)
         # logger.error(res.text)
+        res = requests.get('https://api.starnetwork.io/v3/auth/user', headers=self.headers)
+        if res.text.count('id') > 0:
+            payload = {"id": res.json()['id'], "action": "draw_boost"}
+            res = requests.post('https://api.starnetwork.io/v3/event/draw', json=encrypt(payload), headers=self.headers)
+            # logger.error(res.text)
 
 
 def task(star, lock):
