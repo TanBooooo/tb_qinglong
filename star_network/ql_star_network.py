@@ -69,11 +69,10 @@ class StarNetwork(object):
         return res.text.count('endAt') > 0
 
     def draw(self):
-        requests.get('https://api.starnetwork.io/v3/libra/draw', headers=self.headers)
-        res = requests.get('https://api.starnetwork.io/v3/auth/user', headers=self.headers)
-        if res.text.count('id') > 0:
-            payload = {"id": res.json()['id'], "action": "draw_boost"}
-            requests.post('https://api.starnetwork.io/v3/event/draw', json=encrypt(payload), headers=self.headers)
+        res = requests.get('https://api.starnetwork.io/v3/user/checkin', headers=self.headers)
+        # logger.error(res.text)
+        res = requests.get('https://api.starnetwork.io/v3/libra/draw', headers=self.headers)
+        # logger.error(res.text)
 
 
 def task(star, lock):
@@ -120,7 +119,7 @@ if __name__ == '__main__':
         for em in error_email:
             logger.error(em)
 
-    logger.info('总计成功数: {}'.format(success_count))
-    logger.info('总计失败数: {}'.format(error_count))
+    # logger.info('总计成功数: {}'.format(success_count))
+    # logger.info('总计失败数: {}'.format(error_count))
 
     send(application_name, '总计成功数: {}\n总计失败数: {}'.format(success_count, error_count))
