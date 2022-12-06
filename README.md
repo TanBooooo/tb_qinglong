@@ -12,4 +12,5 @@ ql repo https://ghproxy.com/https://github.com/TanBooooo/tb_qinglong.git "ql_" "
 ```
 
 ## 说明
-自用脚本，请勿非法使用
+自用脚本，请勿非法使用 <br/>
+部分收集于网络
