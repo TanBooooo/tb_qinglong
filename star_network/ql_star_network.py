@@ -1,11 +1,10 @@
 """
-cron: 0 0 2,14 * * ?
+cron: 0 0 0/5 * * ?
 new Env('StarNetwork养号')
 """
 
 import hashlib
 import logging
-import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 

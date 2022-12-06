@@ -1376,7 +1376,8 @@ async function getYjjOrderStatus(baseUrl) {
                 Connection: 'keep-alive',
                 Referer: yjjUrl + '&from=login&spm=89420.1.1.1',
             },
-            data: {orderId: yjjOrderId, adslotId: ''}
+            // data: {orderId: yjjOrderId, adslotId: ''}
+            data: 'orderId=' + yjjOrderId + '&adslotId='
         };
         options.headers['user-timestamp'] = Date.now()
         options.headers['user-random'] = getRandom(0, 31)
@@ -3815,7 +3816,7 @@ async function qhbCode(baseUrl, token) {
             //     is_from_share: '1',
             //     _t: timestampMs()
             // }
-            data: 'ticket=' + qhbOrderData + '&exchangeCodeCount=1&exchangeOneCodeConsumeCredits=' + exchangeOneCodeConsumeCredits + '&token=' + token + '&user_type=1&is_from_share=1&_t='+timestampMs()
+            data: 'ticket=' + qhbOrderData + '&exchangeCodeCount=1&exchangeOneCodeConsumeCredits=' + exchangeOneCodeConsumeCredits + '&token=' + token + '&user_type=1&is_from_share=1&_t=' + timestampMs()
         };
         if (debug) {
             log(`\n【debug】=============== 这是 红包码查询 请求 url ===============`);
