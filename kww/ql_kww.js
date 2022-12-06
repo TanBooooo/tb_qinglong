@@ -7,20 +7,13 @@
  抓包：开着抓包软件打开小程序，抓包链接里面的memberId https://member.kwwblcj.com/member/api/info/?userKeys=v1.0&pageName=member-info-index-search&formName=searchForm&kwwMember.memberId=xxxx
  变量格式：export KWW_COOKIE='xxxx&xxxx2'  多个账号用 @ 或 & 或者 换行 分割
  定时：一天一次
-群文件有抓取口味王ck工具
-不会用加群：212796668、681030097、743744614
-脚本兼容: QuantumultX, Surge,Loon, JSBox, Node.js
 =================================Quantumultx=========================
 [task_local]
 #微信小程序-口味王
-0 40 0 * * * https://github.com/JDWXX/jd_job.git, tag=微信小程序-口味王, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+0 40 0 * * *
 =================================Loon===================================
 [Script]
-cron "0 40 0 * * *" script-path=https://github.com/JDWXX/jd_job.git,tag=微信小程序-口味王
-===================================Surge================================
-微信小程序-口味王 = type=cron,cronexp="0 40 0 * * *",wake-system=1,timeout=3600,script-path=https://github.com/JDWXX/jd_job.git
-====================================小火箭=============================
-微信小程序-口味王 = type=cron,script-path=https://github.com/JDWXX/jd_job.git, cronexpr="0 40 0 * * *", timeout=3600, enable=true
+cron "0 40 0 * * *"
  */
 const $ = new Env('微信小程序-口味王');
 global.window = {};
@@ -72,7 +65,8 @@ let userCname = '';
 let formName = 'searchForm';
 let userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.29(0x18001d36) NetType/WIFI Language/zh_CN';
 let qgyUrl = 'https://89420.activity-20.m.duiba.com.cn/projectx/p85657820/index.html?appID=89420';
-let mrDtUrl = 'https://89420.activity-20.m.duiba.com.cn/projectx/p244f2bb2/index.html?appID=89420&from=login&spm=89420.1.1.1';
+// let mrDtUrl = 'https://89420.activity-20.m.duiba.com.cn/projectx/p244f2bb2/index.html?appID=89420&from=login&spm=89420.1.1.1';
+let mrDtUrl = 'https://89420.activity-20.m.duiba.com.cn/projectx/p129446ea/index.html?appID=89420&from=login&spm=89420.1.1.1';
 let tjUrl = '';
 let tjHtml = '';
 let hdUrl = '';
@@ -115,6 +109,13 @@ let taskBeforeScore = 0;
 let remainingLimitTimes = 0
 let remainJoinTimes = 0
 let tjRecordId = ''
+
+
+let i = ["A", "Z", "B", "Y", "C", "X", "D", "T", "E", "S", "F", "R", "G", "Q", "H", "P", "I", "O", "J", "N", "k", "M", "L", "a", "c", "d", "f", "h", "k", "p", "y", "n"];
+let l = ["A", "Z", "B", "Y", "C", "X", "D", "T", "E", "S", "F", "R", "G", "Q", "H", "P", "I", "O", "J", "N", "k", "M", "L", "a", "c", "d", "f", "h", "k", "p", "y", "n"];
+let o = 8
+
+
 !(async () => {
     if (typeof $request !== "undefined") {
         await GetRewrite();
@@ -226,6 +227,7 @@ async function getBaseInfo() {
  * @returns {Promise<unknown>}
  */
 async function getMemberInfo(timeout = 2000) {
+
     let options = {
         url: `https://member.kwwblcj.com/member/api/info/?userKeys=${userKeys}&pageName=member-info-index-search&formName=${formName}&kwwMember.memberId=${kwwUid}&kwwMember.unionid=${memberUnionid}&memberId=${kwwUid}`,
         headers: {
@@ -236,6 +238,9 @@ async function getMemberInfo(timeout = 2000) {
             Referer: 'https://servicewechat.com/wxfb0905b0787971ad/33/page-frame.html'
         },
     };
+    options.headers['user-timestamp'] = Date.now()
+    options.headers['user-random'] = getRandom(0, 31)
+    options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
     if (debug) {
         log(`\n【debug】=============== 这是 查询会员信息 请求 url ===============`);
         log(JSON.stringify(options));
@@ -289,6 +294,9 @@ async function getMemberScore() {
                 Referer: 'https://servicewechat.com/wxfb0905b0787971ad/33/page-frame.html'
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 请求积分 请求 url ===============`);
             log(JSON.stringify(options));
@@ -342,6 +350,9 @@ async function getQgyUrl() {
                 Referer: 'https://servicewechat.com/wxfb0905b0787971ad/33/page-frame.html'
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 获取青果地址 请求 url ===============`);
             log(JSON.stringify(options));
@@ -393,6 +404,9 @@ async function getMrYdUrl() {
                 Referer: 'https://servicewechat.com/wxfb0905b0787971ad/33/page-frame.html'
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 获取每日阅读 请求 url ===============`);
             log(JSON.stringify(options));
@@ -443,6 +457,9 @@ async function getOtherUrl() {
                 Referer: 'https://servicewechat.com/wxfb0905b0787971ad/33/page-frame.html'
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 获取其他地址 请求 url ===============`);
             log(JSON.stringify(options));
@@ -459,7 +476,7 @@ async function getOtherUrl() {
                     var title = data.rows[i]["title"];
                     var manuscriptId = data.rows[i]["manuscriptId"];
                     if (title.indexOf('每日答题') >= 0 && url.indexOf('https') >= 0) {
-                        mrDtUrl = url+"&from=login&spm=89420.1.1.1";
+                        mrDtUrl = url + "&from=login&spm=89420.1.1.1";
                         log(`获取${title}地址成功`)
                     } else if (title.indexOf('天降好礼') >= 0 && url.indexOf('https') >= 0) {
                         tjUrl = url;
@@ -502,6 +519,9 @@ async function getQhbUrl() {
                 Referer: 'https://servicewechat.com/wxfb0905b0787971ad/33/page-frame.html'
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 获取天天抢红包 请求 url ===============`);
             log(JSON.stringify(options));
@@ -552,6 +572,9 @@ async function xxsBanner() {
                 Referer: 'https://servicewechat.com/wxfb0905b0787971ad/34/page-frame.html',
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 获取资讯信息 请求 url ===============`);
             log(JSON.stringify(options));
@@ -610,6 +633,9 @@ async function selectTaskList() {
                 Referer: 'https://servicewechat.com/wxfb0905b0787971ad/33/page-frame.html'
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 查询任务列表 请求 url ===============`);
             log(JSON.stringify(options));
@@ -666,6 +692,9 @@ async function getSignInfo(timeout = 2000) {
             Referer: 'https://servicewechat.com/wxfb0905b0787971ad/33/page-frame.html'
         },
     };
+    options.headers['user-timestamp'] = Date.now()
+    options.headers['user-random'] = getRandom(0, 31)
+    options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
     if (debug) {
         log(`\n【debug】=============== 这是 查询签到信息 请求 url ===============`);
         log(JSON.stringify(options));
@@ -709,6 +738,7 @@ async function getSignInfo(timeout = 2000) {
         }, timeout)
     })
 }
+
 async function activeTaskFlag(timeout = 2000) {
     let options = {
         url: `https://member.kwwblcj.com/member/api/list/?userKeys=${userKeys}&pageName=activeTaskFlag&formName=editForm&memberId=${kwwUid}&userCname=%7F%7F`,
@@ -720,6 +750,9 @@ async function activeTaskFlag(timeout = 2000) {
             Referer: 'https://servicewechat.com/wxfb0905b0787971ad/33/page-frame.html'
         },
     };
+    options.headers['user-timestamp'] = Date.now()
+    options.headers['user-random'] = getRandom(0, 31)
+    options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
     if (debug) {
         log(`\n【debug】=============== 这是 点击青果 请求 url ===============`);
         log(JSON.stringify(options));
@@ -747,6 +780,7 @@ async function activeTaskFlag(timeout = 2000) {
         }, timeout)
     })
 }
+
 /**
  * 查询接口
  * @param timeout
@@ -754,7 +788,7 @@ async function activeTaskFlag(timeout = 2000) {
  */
 async function dbInterface(timeout = 2000) {
     let options = {
-        url: `https://member.kwwblcj.com/member/api/info/?userKeys=${userKeys}&pageName=dbInterface&formName=treeStatus&uid=${kwwUid}`,
+        url: `https://member.kwwblcj.com/member/api/info/?userKeys=${userKeys}&pageName=dbInterface&formName=treeStatus&uid=${kwwUid}&memberId=${kwwUid}`,
         headers: {
             Host: 'member.kwwblcj.com',
             Connection: 'keep-alive',
@@ -763,6 +797,9 @@ async function dbInterface(timeout = 2000) {
             Referer: 'https://servicewechat.com/wxfb0905b0787971ad/33/page-frame.html'
         },
     };
+    options.headers['user-timestamp'] = Date.now()
+    options.headers['user-random'] = getRandom(0, 31)
+    options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
     if (debug) {
         log(`\n【debug】=============== 这是 查询接口 请求 url ===============`);
         log(JSON.stringify(options));
@@ -818,6 +855,9 @@ async function signIn() {
                 memberName: userCname
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 签到请求 请求 url ===============`);
             log(JSON.stringify(options));
@@ -861,6 +901,9 @@ async function readInfo() {
                 Referer: 'https://servicewechat.com/wxfb0905b0787971ad/34/page-frame.html',
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 阅读信息 请求 url ===============`);
             log(JSON.stringify(options));
@@ -917,6 +960,9 @@ async function readSubmit() {
                 Referer: 'https://servicewechat.com/wxfb0905b0787971ad/34/page-frame.html',
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 阅读提交 请求 url ===============`);
             log(JSON.stringify(options));
@@ -962,8 +1008,10 @@ async function loginFreePlugin(redirect) {
                 pageName: 'loginFreePlugin',
                 formName: 'searchForm',
                 uid: kwwUid,
-                levelCode: '1',
-                redirect: redirect
+                levelCode: 'K1',
+                redirect: redirect,
+                objId: 'gdbanner',
+                memberId: kwwUid
             },
             headers: {
                 Host: 'member.kwwblcj.com',
@@ -973,7 +1021,9 @@ async function loginFreePlugin(redirect) {
                 Referer: 'https://servicewechat.com/wxfb0905b0787971ad/33/page-frame.html'
             }
         };
-
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         axios.request(options).then(function (response) {
             try {
                 var data = response.data;
@@ -1109,13 +1159,7 @@ async function getAjaxElement(baseUrl, activityId) {
                 Connection: 'keep-alive',
                 Referer: yjjUrl + '&from=login&spm=89420.1.1.1',
             },
-            data: {
-                hdType: 'dev',
-                hdToolId: '',
-                preview: 'false',
-                actId: activityId,
-                adslotId: ''
-            }
+            data: `hdType=dev&hdToolId=&preview=false&actId=${activityId}&adslotId=`
         };
         if (debug) {
             log(`\n【debug】=============== 这是 获取疯狂摇奖机次数 请求 url ===============`);
@@ -1168,6 +1212,9 @@ async function getYjjHtml() {
                 'Accept-Encoding': 'gzip, deflate, br'
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 疯狂摇奖机 请求 url ===============`);
             log(JSON.stringify(options));
@@ -1214,12 +1261,7 @@ async function getYjjToken(baseUrl, activityId, consumerId) {
                 Connection: 'keep-alive',
                 Referer: yjjUrl + '&from=login&spm=89420.1.1.1',
             },
-            data: {
-                timestamp: timestampMs(),
-                activityId: activityId,
-                activityType: 'hdtool',
-                consumerId: consumerId
-            }
+            data: `timestamp=${timestampMs()}&activityId=${activityId}&activityType=hdtool&consumerId=${consumerId}`
         };
         if (debug) {
             log(`\n【debug】=============== 这是 获取疯狂摇奖机token 请求 url ===============`);
@@ -1275,14 +1317,9 @@ async function doYjjJoin(baseUrl, activityId, consumerId, token) {
                 Connection: 'keep-alive',
                 Referer: yjjUrl + '&from=login&spm=89420.1.1.1',
             },
-            data: {
-                actId: activityId,
-                oaId: activityId,
-                activityType: 'hdtool',
-                consumerId: consumerId,
-                token: token
-            }
+            data: `actId=${activityId}&oaId=${activityId}&activityType=hdtool&consumerId=${consumerId}&token=${token}`
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 摇奖 请求 url ===============`);
             log(JSON.stringify(options));
@@ -1341,6 +1378,9 @@ async function getYjjOrderStatus(baseUrl) {
             },
             data: {orderId: yjjOrderId, adslotId: ''}
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 摇奖状态 请求 url ===============`);
             log(JSON.stringify(options));
@@ -1410,37 +1450,36 @@ async function finishHd(num) {
 
                 await startHdGame(baseUrl, opId);
 
-
                 if (hdStartId != '') {
                     await getHdOrderStatus(baseUrl, opId);
                     await $.wait(2000);
-                    await startHdRound(baseUrl, opId,hdStartId,"1");
+                    await startHdRound(baseUrl, opId, hdStartId, "1");
                     await $.wait(30000);
 
-                    await hdtj('1','5',hdStartId,'5',hdKey)
+                    await hdtj('1', '5', hdStartId, '5', hdKey)
                     await $.wait(2000);
                     if (hdSubmitFlag) {
-                        await hdDraw(baseUrl, opId,hdStartId,"1");
+                        await hdDraw(baseUrl, opId, hdStartId, "1");
                     }
 
                     if (hdDrawFlag && hdSubmitFlag) {
-                        await startHdRound(baseUrl, opId,hdStartId,"2");
+                        await startHdRound(baseUrl, opId, hdStartId, "2");
                         await $.wait(30000);
 
-                        await hdtj('2','10',hdStartId,'15',hdKey)
+                        await hdtj('2', '10', hdStartId, '15', hdKey)
                         if (hdSubmitFlag) {
-                            await hdDraw(baseUrl, opId,hdStartId,"2");
+                            await hdDraw(baseUrl, opId, hdStartId, "2");
                         }
                     }
                     await $.wait(1000);
                     if (hdDrawFlag && hdSubmitFlag) {
-                        await startHdRound(baseUrl, opId,hdStartId,"3");
+                        await startHdRound(baseUrl, opId, hdStartId, "3");
                         await $.wait(30000);
 
-                        await hdtj('3','15',hdStartId,'30',hdKey)
+                        await hdtj('3', '15', hdStartId, '30', hdKey)
                         await $.wait(2000);
                         if (hdSubmitFlag) {
-                            await hdDraw(baseUrl, opId,hdStartId,"3");
+                            await hdDraw(baseUrl, opId, hdStartId, "3");
                         }
 
                     }
@@ -1515,8 +1554,11 @@ async function getHdInfo(baseUrl, opId) {
                 Referer: 'https://89420.activity-20.m.duiba.com.cn/aaw/underseaGame/index?opId=202214587511596&dbnewopen&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'en-us,en'
             },
-            data: {}
+            data: ''
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 海岛游戏信息 请求 url ===============`);
             log(JSON.stringify(options));
@@ -1572,12 +1614,14 @@ async function startHdGame(baseUrl, opId) {
                 Referer: hdUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'en-us,en'
             },
-            data: {opId: opId}
+            data: `opId=` + opId
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 开始海岛游戏 请求 url ===============`);
             log(JSON.stringify(options));
         }
+
         axios.request(options).then(function (response) {
             try {
                 var data = response.data;
@@ -1635,8 +1679,9 @@ async function getHdOrderStatus(baseUrl, opId) {
                 Referer: hdUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'en-us,en'
             },
-            data: {}
+            data: ''
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 获取海岛订单状态 请求 url ===============`);
             log(JSON.stringify(options));
@@ -1673,7 +1718,7 @@ async function getHdOrderStatus(baseUrl, opId) {
  * @param hdRoundIndex
  * @returns {Promise<unknown>}
  */
-async function startHdRound(baseUrl, opId,hdStartId,hdRoundIndex) {
+async function startHdRound(baseUrl, opId, hdStartId, hdRoundIndex) {
     return new Promise((resolve) => {
         let url = baseUrl + 'startRound';
         let host = (baseUrl.split('//')[1]).split('/')[0];
@@ -1691,8 +1736,9 @@ async function startHdRound(baseUrl, opId,hdStartId,hdRoundIndex) {
                 Referer: hdUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'en-us,en'
             },
-            data: {opId: opId, startId: hdStartId, roundIndex: hdRoundIndex}
+            data: 'opId=' + opId + '&startId=' + hdStartId + '&roundIndex=' + hdRoundIndex
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 开始海岛关口 请求 url ===============`);
             log(JSON.stringify(options));
@@ -1732,17 +1778,17 @@ async function startHdRound(baseUrl, opId,hdStartId,hdRoundIndex) {
  * @param hdRoundIndex
  * @returns {Promise<unknown>}
  */
-async function hdtj(hdRoundIndex,hdScore,hdStartId,hdTotalScore,hdKey) {
+async function hdtj(hdRoundIndex, hdScore, hdStartId, hdTotalScore, hdKey) {
     hdDrawFlag = false;
     return new Promise((resolve) => {
-        let url ='https://89420.activity-20.m.duiba.com.cn/aaw/underseaGame/submit';
+        let url = 'https://89420.activity-20.m.duiba.com.cn/aaw/underseaGame/submit';
 
         let sign = md5('opId=202214587511596&roundIndex=' + hdRoundIndex + '&score=' + hdScore + '&startId=' + hdStartId + '&totalScore=' + hdTotalScore + '&key=' + hdKey)
 
         var options = {
             method: 'POST',
             url: url,
-            data:'opId=202214587511596&startId='+ hdStartId +'&score='+hdScore+'&totalScore='+hdTotalScore+'&roundIndex='+hdRoundIndex+'&sign='+sign,
+            data: 'opId=202214587511596&startId=' + hdStartId + '&score=' + hdScore + '&totalScore=' + hdTotalScore + '&roundIndex=' + hdRoundIndex + '&sign=' + sign,
             headers: {
                 cookie: gameCookie,
                 'Cache-Control': 'no-cache',
@@ -1755,8 +1801,8 @@ async function hdtj(hdRoundIndex,hdScore,hdStartId,hdTotalScore,hdKey) {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36 MicroMessenger/7.0.4.501 NetType/WIFI MiniProgramEnv/Windows WindowsWechat/WMPF',
                 'Accept-Encoding': 'gzip, deflate',
             },
-
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 海岛提交 请求 url ===============`);
             log(JSON.stringify(options));
@@ -1766,7 +1812,8 @@ async function hdtj(hdRoundIndex,hdScore,hdStartId,hdTotalScore,hdKey) {
                 var data = response.data;
                 if (debug) {
                     log(`\n\n【debug】===============这是 海岛提交 返回data==============`);
-                    log(JSON.stringify(data))}
+                    log(JSON.stringify(data))
+                }
                 if (data.hasOwnProperty('success') && data.success) {
                     log(`海岛提交成功，${data.data.rewardToolType}`)
                     hdSubmitFlag = true;
@@ -1785,7 +1832,8 @@ async function hdtj(hdRoundIndex,hdScore,hdStartId,hdTotalScore,hdKey) {
     })
 
 }
-async function hdSubmit(baseUrl, opId, hdKey,hdScore,hdTotalScore,hdRoundIndex) {
+
+async function hdSubmit(baseUrl, opId, hdKey, hdScore, hdTotalScore, hdRoundIndex) {
     hdSubmitFlag = false;
     return new Promise((resolve) => {
         let url = 'https://89420.activity-20.m.duiba.com.cn/aaw/underseaGame/submit';
@@ -1821,7 +1869,7 @@ async function hdSubmit(baseUrl, opId, hdKey,hdScore,hdTotalScore,hdRoundIndex) 
             method: 'POST',
             url: url,
             //params: {__ts__: timestampMs()},
-            data:`opId=${opId}&startId=${hdStartId}&score=${hdScore}&totalScore=${hdTotalScore}&roundIndex=${hdRoundIndex}&sign=${sign}`,
+            data: `opId=${opId}&startId=${hdStartId}&score=${hdScore}&totalScore=${hdTotalScore}&roundIndex=${hdRoundIndex}&sign=${sign}`,
             headers: {
                 cookie: gameCookie,
                 Host: host,
@@ -1829,7 +1877,6 @@ async function hdSubmit(baseUrl, opId, hdKey,hdScore,hdTotalScore,hdRoundIndex) 
                 'User-Agent': userAgent,
                 'Content-Type': 'application/x-www-form-urlencoded',
                 Accept: '*/*',
-                'Content-Length': '108',
                 Referer: hdUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'en-us,en'
             },
@@ -1873,7 +1920,7 @@ async function hdSubmit(baseUrl, opId, hdKey,hdScore,hdTotalScore,hdRoundIndex) 
  * @param hdRoundIndex
  * @returns {Promise<unknown>}
  */
-async function hdDraw(baseUrl, opId,hdStartId,hdRoundIndex) {
+async function hdDraw(baseUrl, opId, hdStartId, hdRoundIndex) {
     hdDrawFlag = false;
     return new Promise((resolve) => {
         let url = baseUrl + 'draw';
@@ -1890,11 +1937,11 @@ async function hdDraw(baseUrl, opId,hdStartId,hdRoundIndex) {
                 Connection: 'keep-alive',
                 Accept: '*/*',
                 'User-Agent': userAgent,
-                'Content-Length': '49',
                 Referer: hdUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9'
             },
-            data: {opId: opId, startId: hdStartId, roundIndex: hdRoundIndex}
+            // data: {opId: opId, startId: hdStartId, roundIndex: hdRoundIndex}
+            data: 'opId=' + opId + '&startId=' + hdStartId + '&roundIndex=' + hdRoundIndex
         };
         if (debug) {
             log(`\n【debug】=============== 这是 海岛抽奖 请求 url ===============`);
@@ -2032,6 +2079,7 @@ async function getTjInfo(baseUrl, activityId) {
                 Referer: tjUrl + '&from=login&spm=89420.1.1.1',
             }
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 查询天降好礼信息 请求 url ===============`);
             log(JSON.stringify(options));
@@ -2092,6 +2140,9 @@ async function doTjJoin(baseUrl, activityId) {
             },
             data: "id=" + activityId
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 开始天降好礼游戏 请求 url ===============`);
             log(JSON.stringify(options));
@@ -2163,6 +2214,9 @@ async function tjSubmit(baseUrl, activityId) {
                 sign: sign
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 提交天降好礼游戏 请求 url ===============`);
             log(JSON.stringify(options));
@@ -2216,6 +2270,9 @@ async function tjOrderStatus(baseUrl) {
                 Referer: tjUrl + '&from=login&spm=89420.1.1.1',
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 查询天降好礼奖励 请求 url ===============`);
             log(JSON.stringify(options));
@@ -2292,7 +2349,7 @@ async function finishQgy(num) {
             await getTokenStr(baseUrl);
             await $.wait(2000);
             qgyToken = dealToken(tokenStr, tokenKeyStr);
-            if(currentStatusHaveMillis == currentStatusNeedMillis){
+            if (currentStatusHaveMillis == currentStatusNeedMillis) {
                 await collectCoconut(baseUrl, qgyToken)
             }
         } catch (e) {
@@ -2360,6 +2417,11 @@ async function finishQgy(num) {
 
         }
     }
+
+    await getTokenKeyStr(baseUrl);
+    await $.wait(2000);
+    await getQgyInfo(baseUrl);
+
     if (qgyProcess !== 'NaN%') {
         log('====能量加速====')
         if (leftEnergyBall > 0) {
@@ -2410,13 +2472,15 @@ async function useEnergyBall(baseUrl, token) {
                 Referer: qgyUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9'
             },
-            data: {
-                token: token,
-                user_type: '1',
-                is_from_share: '1',
-                _t: timestampMs()
-            }
+            // data: {
+            //     token: token,
+            //     user_type: '1',
+            //     is_from_share: '1',
+            //     _t: timestampMs()
+            // }
+            data: 'token=' + token + '&user_type=1&is_from_share=1&_t=' + timestampMs()
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 能量加速 请求 url ===============`);
             log(JSON.stringify(options));
@@ -2441,6 +2505,7 @@ async function useEnergyBall(baseUrl, token) {
     })
 
 }
+
 async function collectCoconut(baseUrl, token) {
     return new Promise((resolve) => {
         var url = baseUrl + 'game/collectCoconut.do';
@@ -2460,13 +2525,15 @@ async function collectCoconut(baseUrl, token) {
                 Referer: qgyUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9'
             },
-            data: {
-                token: token,
-                user_type: '1',
-                is_from_share: '1',
-                _t: timestampMs()
-            }
+            // data: {
+            //     token: token,
+            //     user_type: '1',
+            //     is_from_share: '1',
+            //     _t: timestampMs()
+            // }
+            data: 'token=' + token + '&user_type=1&is_from_share=1&_t=' + timestampMs()
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 果园收取 请求 url ===============`);
             log(JSON.stringify(options));
@@ -2491,13 +2558,14 @@ async function collectCoconut(baseUrl, token) {
     })
 
 }
+
 /**
  * 获取信息
  * @param baseUrl
  * @returns {Promise<unknown>}
  */
 async function getQgyInfo(baseUrl) {
-    return new Promise(async(resolve) => {
+    return new Promise(async (resolve) => {
         var url = baseUrl + 'game/index.do';
         var host = (url.split('//')[1]).split('/')[0];
         var options = {
@@ -2514,8 +2582,9 @@ async function getQgyInfo(baseUrl) {
                 Referer: qgyUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9'
             },
-            data: {}
+            data: ''
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 查询青果园信息 请求 url ===============`);
             log(JSON.stringify(options));
@@ -2575,8 +2644,9 @@ async function qgyCheckQuery(baseUrl) {
                 Referer: qgyUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
             },
-            data: {}
+            data: ''
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 查询青果园签到状态 请求 url ===============`);
             log(JSON.stringify(options));
@@ -2628,8 +2698,10 @@ async function qgyCreateItem(baseUrl, token) {
                 Referer: qgyUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9'
             },
-            data: {token: token, user_type: '1', is_from_share: '1', _t: timestampMs()}
+            // data: {token: token, user_type: '1', is_from_share: '1', _t: timestampMs()}
+            data: 'token=' + token + '&user_type=1&is_from_share=1&_t=' + timestampMs()
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 青果园首次进入 请求 url ===============`);
             log(JSON.stringify(options));
@@ -2680,8 +2752,10 @@ async function qgySign(baseUrl, token) {
                 Referer: qgyUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'en-us,en'
             },
-            data: {token: token, user_type: '0', is_from_share: '1', _t: timestampMs()}
+            // data: {token: token, user_type: '0', is_from_share: '1', _t: timestampMs()}
+            data: 'token=' + token + '&user_type=1&is_from_share=1&_t=' + timestampMs()
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 青果园签到 请求 url ===============`);
             log(JSON.stringify(options));
@@ -2738,8 +2812,9 @@ async function queryQgyTask(baseUrl) {
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding': 'gzip, deflate, br'
             },
-            data: {}
+            data: ''
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 获取请果园任务 请求 url ===============`);
             log(JSON.stringify(options));
@@ -2793,14 +2868,16 @@ async function finishBrowseInfoTask(baseUrl, token, taskCode, taskTitle) {
                 Referer: qgyUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9'
             },
-            data: {
-                taskCode: taskCode,
-                token: token,
-                user_type: '1',
-                is_from_share: '1',
-                _t: timestampMs()
-            }
+            // data: {
+            //     taskCode: taskCode,
+            //     token: token,
+            //     user_type: '1',
+            //     is_from_share: '1',
+            //     _t: timestampMs()
+            // }
+            data: 'taskCode=' + taskCode + '&token=' + token + '&user_type=1&is_from_share=1&_t=' + timestampMs()
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 完成青果园任务 请求 url ===============`);
             log(JSON.stringify(options));
@@ -2855,8 +2932,9 @@ async function newRewardInfo(baseUrl) {
                 Referer: qgyUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
             },
-            data: {}
+            data: ''
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 领取奖励信息 请求 url ===============`);
             log(JSON.stringify(options));
@@ -2905,6 +2983,7 @@ async function getTokenKeyStr(baseUrl) {
                 Referer: baseUrl + 'index.html?appID=89420&from=login&spm=89420.1.1.1',
             }
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 获取tokenKey 请求 url ===============`);
             log(JSON.stringify(options));
@@ -2955,8 +3034,9 @@ async function getTokenStr(baseUrl) {
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
                 'Accept-Encoding': 'gzip, deflate, br'
             },
-            data: {}
+            data: ""
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 获取token 请求 url ===============`);
             log(JSON.stringify(options));
@@ -3009,8 +3089,10 @@ async function startTravel(baseUrl, token) {
                 Referer: qgyUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9'
             },
-            data: {token: token, user_type: '1', is_from_share: '1', _t: timestampMs()}
+            // data: {token: token, user_type: '1', is_from_share: '1', _t: timestampMs()}
+            data: "token: " + token + "&user_type=1&is_from_share=1&_t=" + timestampMs()
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 开始旅行 请求 url ===============`);
             log(JSON.stringify(options));
@@ -3128,8 +3210,9 @@ async function qhbHistory(baseUrl) {
                 Referer: qhbUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
             },
-            data: {}
+            data: ""
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 抢红包记录 请求 url ===============`);
             log(JSON.stringify(options));
@@ -3202,7 +3285,7 @@ async function qhbIndex(baseUrl) {
                 Referer: qhbUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
             },
-            data: {}
+            data: ""
         };
         if (debug) {
             log(`\n【debug】=============== 这是 抢红包首页 请求 url ===============`);
@@ -3268,8 +3351,9 @@ async function exchangeInfo(baseUrl) {
                 Referer: qhbUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
             },
-            data: {}
+            data: ""
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 抢红包活动信息 请求 url ===============`);
             log(JSON.stringify(options));
@@ -3304,6 +3388,7 @@ async function exchangeInfo(baseUrl) {
 
 
 }
+
 async function getjcTokenKey() {
     return new Promise((resolve) => {
         var url = 'https://89420.activity-20.m.duiba.com.cn/projectx/p15fbb34c/getTokenKey?';
@@ -3319,7 +3404,6 @@ async function getjcTokenKey() {
                 Connection: 'keep-alive',
                 'User-Agent': userAgent,
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
-
             }
         };
 
@@ -3371,8 +3455,9 @@ async function getjcToken(baseUrl) {
                 Referer: qhbUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
             },
-            data: {}
+            data: ''
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 竞猜token 请求 url ===============`);
             log(JSON.stringify(options));
@@ -3397,6 +3482,7 @@ async function getjcToken(baseUrl) {
     })
 
 }
+
 /**
  * 获取抢红包tokenkey
  * @param baseUrl
@@ -3469,8 +3555,9 @@ async function getQhbToken(baseUrl) {
                 Referer: qhbUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
             },
-            data: {}
+            data: ''
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 获取抢红包token 请求 url ===============`);
             log(JSON.stringify(options));
@@ -3521,15 +3608,17 @@ async function qhbExchange(baseUrl, token) {
                 Referer: qhbUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9'
             },
-            data: {
-                exchangeOneCodeConsumeCredits: exchangeOneCodeConsumeCredits,
-                exchangeCodeCount: '1',
-                token: token,
-                user_type: '1',
-                is_from_share: '1',
-                _t: timestampMs()
-            }
+            // data: {
+            //     exchangeOneCodeConsumeCredits: exchangeOneCodeConsumeCredits,
+            //     exchangeCodeCount: '1',
+            //     token: token,
+            //     user_type: '1',
+            //     is_from_share: '1',
+            //     _t: timestampMs()
+            // }
+            data: 'exchangeOneCodeConsumeCredits=' + exchangeOneCodeConsumeCredits + '&exchangeCodeCount=1&token=' + token + '&user_type=1&is_from_share=1&_t=' + timestampMs()
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 抢红包提交 请求 url ===============`);
             log(JSON.stringify(options));
@@ -3583,17 +3672,21 @@ async function qhbCreditsCost(baseUrl) {
                 Referer: qhbUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9'
             },
-            data: {
-                toPlaywayId: 'game',
-                toActionId: 'exchange',
-                desc: 'exchange_consume_credits_desc',
-                credits: exchangeOneCodeConsumeCredits,
-                orderId: qhbOrderId,
-                user_type: '1',
-                is_from_share: '1',
-                _t: timestampMs()
-            }
+            // data: {
+            //     toPlaywayId: 'game',
+            //     toActionId: 'exchange',
+            //     desc: 'exchange_consume_credits_desc',
+            //     credits: exchangeOneCodeConsumeCredits,
+            //     orderId: qhbOrderId,
+            //     user_type: '1',
+            //     is_from_share: '1',
+            //     _t: timestampMs()
+            // }
+            data: 'credits=' + exchangeOneCodeConsumeCredits + '&orderId=' + qhbOrderId + '&toActionId=exchange&toPlaywayId=game&desc=exchange_consume_credits_desc&exchangeCodeCount=1&token=' + token + '&user_type=1&is_from_share=1&_t=' + timestampMs()
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 抢红包扣积分 请求 url ===============`);
             log(JSON.stringify(options));
@@ -3652,7 +3745,7 @@ async function qhbOrderStatus(baseUrl) {
                 Referer: 'https://89420.activity-20.m.duiba.com.cn/projectx/p725daef0/index.html?appID=89420&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
             },
-            data: {}
+            data: ''
         };
         if (debug) {
             log(`\n【debug】=============== 这是 抢红包订单状态 请求 url ===============`);
@@ -3713,15 +3806,16 @@ async function qhbCode(baseUrl, token) {
                 Referer: 'https://89420.activity-20.m.duiba.com.cn/projectx/p725daef0/index.html?appID=89420&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9'
             },
-            data: {
-                ticket: qhbOrderData,
-                exchangeCodeCount: '1',
-                exchangeOneCodeConsumeCredits: exchangeOneCodeConsumeCredits,
-                token: token,
-                user_type: '1',
-                is_from_share: '1',
-                _t: timestampMs()
-            }
+            // data: {
+            //     ticket: qhbOrderData,
+            //     exchangeCodeCount: '1',
+            //     exchangeOneCodeConsumeCredits: exchangeOneCodeConsumeCredits,
+            //     token: token,
+            //     user_type: '1',
+            //     is_from_share: '1',
+            //     _t: timestampMs()
+            // }
+            data: 'ticket=' + qhbOrderData + '&exchangeCodeCount=1&exchangeOneCodeConsumeCredits=' + exchangeOneCodeConsumeCredits + '&token=' + token + '&user_type=1&is_from_share=1&_t='+timestampMs()
         };
         if (debug) {
             log(`\n【debug】=============== 这是 红包码查询 请求 url ===============`);
@@ -3884,7 +3978,7 @@ async function answerStart(baseUrl) {
                 Referer: mrDtUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
             },
-            data: {}
+            data: ``
         };
         if (debug) {
             log(`\n【debug】=============== 这是 开始答题 请求 url ===============`);
@@ -3940,8 +4034,9 @@ async function getQuestion(baseUrl) {
                 Referer: mrDtUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
             },
-            data: {}
+            data: ''
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 获取问题 请求 url ===============`);
             log(JSON.stringify(options));
@@ -4012,8 +4107,11 @@ async function answerSubmit(baseUrl) {
                 Referer: mrDtUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
             },
-            data: {}
+            data: ''
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 提交答题 请求 url ===============`);
             log(JSON.stringify(options));
@@ -4079,8 +4177,9 @@ async function complete(baseUrl) {
                 Referer: mrDtUrl + '&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
             },
-            data: {}
+            data: ''
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 完成答题 请求 url ===============`);
             log(JSON.stringify(options));
@@ -4135,8 +4234,9 @@ async function answerPage(baseUrl) {
                 Referer: 'https://89420.activity-20.m.duiba.com.cn/projectx/p129446ea/index.html?appID=89420&from=login&spm=89420.1.1.1',
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9',
             },
-            data: {}
+            data: ''
         };
+
         if (debug) {
             log(`\n【debug】=============== 这是 答题页面 请求 url ===============`);
             log(JSON.stringify(options));
@@ -4166,9 +4266,10 @@ async function answerPage(baseUrl) {
     })
 
 }
+
 //======================竞猜=====================
 async function jcinfo() {
-    return new Promise(async(resolve) => {
+    return new Promise(async (resolve) => {
 
         var options = {
             method: 'GET',
@@ -4189,6 +4290,9 @@ async function jcinfo() {
                 'Accept-Encoding': 'gzip, deflate'
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 竞猜页面 请求 url ===============`);
             log(JSON.stringify(options));
@@ -4219,8 +4323,9 @@ async function jcinfo() {
     })
 
 }
+
 async function jcquery(nextMatchInfoTime) {
-    return new Promise(async(resolve) => {
+    return new Promise(async (resolve) => {
 
         var options = {
             method: 'GET',
@@ -4246,6 +4351,9 @@ async function jcquery(nextMatchInfoTime) {
                 'Accept-Encoding': 'gzip, deflate'
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 竞猜页面 请求 url ===============`);
             log(JSON.stringify(options));
@@ -4280,8 +4388,9 @@ async function jcquery(nextMatchInfoTime) {
 
     })
 }
+
 async function jccreditsCost() {
-    return new Promise(async(resolve) => {
+    return new Promise(async (resolve) => {
 
         var options = {
             method: 'POST',
@@ -4302,6 +4411,9 @@ async function jccreditsCost() {
             },
             data: 'toPlaywayId=home&toActionId=betting&credits=18&desc=credits_desc&user_type=0&is_from_share=1&_t=1668919309582'
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 竞猜页面 请求 url ===============`);
             log(JSON.stringify(options));
@@ -4332,6 +4444,7 @@ async function jccreditsCost() {
     })
 
 }
+
 async function jcqueryStatus() {
     return new Promise((resolve) => {
 
@@ -4359,6 +4472,9 @@ async function jcqueryStatus() {
                 'Accept-Encoding': 'gzip, deflate'
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 竞猜页面 请求 url ===============`);
             log(JSON.stringify(options));
@@ -4389,7 +4505,8 @@ async function jcqueryStatus() {
     })
 
 }
-async function jcbetting(ticket,optionId,matchId,token) {
+
+async function jcbetting(ticket, optionId, matchId, token) {
     return new Promise((resolve) => {
 
         var options = {
@@ -4420,6 +4537,9 @@ async function jcbetting(ticket,optionId,matchId,token) {
                 'Accept-Encoding': 'gzip, deflate'
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 竞猜页面 请求 url ===============`);
             log(JSON.stringify(options));
@@ -4452,6 +4572,7 @@ async function jcbetting(ticket,optionId,matchId,token) {
     })
 
 }
+
 async function jcrecord() {
     return new Promise((resolve) => {
 
@@ -4474,6 +4595,9 @@ async function jcrecord() {
                 'Accept-Encoding': 'gzip, deflate'
             }
         };
+        options.headers['user-timestamp'] = Date.now()
+        options.headers['user-random'] = getRandom(0, 31)
+        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 竞猜页面 请求 url ===============`);
             log(JSON.stringify(options));
@@ -4487,7 +4611,7 @@ async function jcrecord() {
                 }
                 if (data.success) {
                     recordinfo = data.data.bettingInfoArray;
-                    for(let i = 0; i < recordinfo.length; i++){
+                    for (let i = 0; i < recordinfo.length; i++) {
                         homeName = recordinfo[i].homeName
                         awayName = recordinfo[i].awayName
                         joinNum = recordinfo[i].joinNum
@@ -4496,13 +4620,13 @@ async function jcrecord() {
                         option2 = recordinfo[i].option2
                         option3 = recordinfo[i].option3
                         log('竞猜第' + i + "场")
-                        if (recordinfo.select == 1 ){
+                        if (recordinfo.select == 1) {
                             log("叼毛选择：" + homeName + "赢")
                         }
-                        if (recordinfo.select == 0 ){
+                        if (recordinfo.select == 0) {
                             log("叼毛选择：平局")
                         }
-                        if (recordinfo.select == 3 ){
+                        if (recordinfo.select == 3) {
                             log("叼毛选择：" + awayName + "赢")
                         }
                     }
@@ -4523,6 +4647,7 @@ async function jcrecord() {
     })
 
 }
+
 async function finishJc(num) {
     await loginFreePlugin(qhbUrl);
     await $.wait(3000)
@@ -4540,7 +4665,7 @@ async function finishJc(num) {
     try {
         await jcinfo();
         await jcquery(nextMatchInfoTime);
-        for(let i = 0; i < queryinfo.length; i++){
+        for (let i = 0; i < queryinfo.length; i++) {
             homeName = queryinfo[i].homeName
             awayName = queryinfo[i].awayName
             joinNum = queryinfo[i].joinNum
@@ -4549,20 +4674,20 @@ async function finishJc(num) {
             option2 = queryinfo[i].option2
             option3 = queryinfo[i].option3
             select = queryinfo[i].select
-            matchTime =queryinfo[i].matchTime
-            if(option1 >  option3){optionId = 1}
-            else optionId = 3
+            matchTime = queryinfo[i].matchTime
+            if (option1 > option3) {
+                optionId = 1
+            } else optionId = 3
             log('竞猜第' + i + "场")
             log(homeName + " VS " + awayName)
             log("参与人数：" + joinNum)
             log(homeName + "支持率：" + option1)
             log("平局" + "支持率：" + option2)
             log(awayName + "支持率：" + option3)
-            if(select !== null && 3){
+            if (select !== null && 3) {
                 log('已经参加竞猜了 跳过')
-            }else
-            if(select == null){
-                if(matchTime > nextMatchInfoTime){
+            } else if (select == null) {
+                if (matchTime > nextMatchInfoTime) {
                     log('没有参加过竞猜 去竞猜')
                     await jccreditsCost()
                     await $.wait(3000);
@@ -4572,9 +4697,9 @@ async function finishJc(num) {
                     await getjcToken();
                     await $.wait(1000);
                     var qhbToken = dealToken(tokenStr, tokenKeyStr);
-                    await jcbetting(jcticketNum,optionId,matchId,qhbToken)
-                    if (jcjg == false){
-                        if(matchTime > nextMatchInfoTime){
+                    await jcbetting(jcticketNum, optionId, matchId, qhbToken)
+                    if (jcjg == false) {
+                        if (matchTime > nextMatchInfoTime) {
                             await jccreditsCost()
                             await $.wait(3000);
                             await jcqueryStatus()
@@ -4583,18 +4708,17 @@ async function finishJc(num) {
                             await getjcToken();
                             await $.wait(1000);
                             var qhbToken = dealToken(tokenStr, tokenKeyStr);
-                            await jcbetting(jcticketNum,optionId,matchId,qhbToken)}
+                            await jcbetting(jcticketNum, optionId, matchId, qhbToken)
+                        }
                     }
                 }
             }
         }
 
 
-
         await jcrecord()
 
         await $.wait(2000);
-
 
 
     } catch (e) {
@@ -5090,7 +5214,6 @@ function modify() {
 }
 
 
-
 function Env(t, e) {
     "undefined" != typeof process && JSON.stringify(process.env).indexOf("GITHUB") > -1 && process.exit(0);
 
@@ -5379,3 +5502,110 @@ function Env(t, e) {
         }
     }(t, e)
 }
+
+/*
+加密
+ */
+
+function s(e, t) {
+    var a, n, r, i, o, l, s, u, p;
+    for (e[t >> 5] |= 128 << t % 32, e[14 + (t + 64 >>> 9 << 4)] = t, a = 1732584193,
+             n = -271733879, r = -1732584194, i = 271733878, o = 0; o < e.length; o += 16) l = a,
+        s = n, u = r, p = i, a = d(a, n, r, i, e[o + 0], 7, -680876936), i = d(i, a, n, r, e[o + 1], 12, -389564586),
+        r = d(r, i, a, n, e[o + 2], 17, 606105819), n = d(n, r, i, a, e[o + 3], 22, -1044525330),
+        a = d(a, n, r, i, e[o + 4], 7, -176418897), i = d(i, a, n, r, e[o + 5], 12, 1200080426),
+        r = d(r, i, a, n, e[o + 6], 17, -1473231341), n = d(n, r, i, a, e[o + 7], 22, -45705983),
+        a = d(a, n, r, i, e[o + 8], 7, 1770035416), i = d(i, a, n, r, e[o + 9], 12, -1958414417),
+        r = d(r, i, a, n, e[o + 10], 17, -42063), n = d(n, r, i, a, e[o + 11], 22, -1990404162),
+        a = d(a, n, r, i, e[o + 12], 7, 1804603682), i = d(i, a, n, r, e[o + 13], 12, -40341101),
+        r = d(r, i, a, n, e[o + 14], 17, -1502002290), n = d(n, r, i, a, e[o + 15], 22, 1236535329),
+        a = c(a, n, r, i, e[o + 1], 5, -165796510), i = c(i, a, n, r, e[o + 6], 9, -1069501632),
+        r = c(r, i, a, n, e[o + 11], 14, 643717713), n = c(n, r, i, a, e[o + 0], 20, -373897302),
+        a = c(a, n, r, i, e[o + 5], 5, -701558691), i = c(i, a, n, r, e[o + 10], 9, 38016083),
+        r = c(r, i, a, n, e[o + 15], 14, -660478335), n = c(n, r, i, a, e[o + 4], 20, -405537848),
+        a = c(a, n, r, i, e[o + 9], 5, 568446438), i = c(i, a, n, r, e[o + 14], 9, -1019803690),
+        r = c(r, i, a, n, e[o + 3], 14, -187363961), n = c(n, r, i, a, e[o + 8], 20, 1163531501),
+        a = c(a, n, r, i, e[o + 13], 5, -1444681467), i = c(i, a, n, r, e[o + 2], 9, -51403784),
+        r = c(r, i, a, n, e[o + 7], 14, 1735328473), n = c(n, r, i, a, e[o + 12], 20, -1926607734),
+        a = f(a, n, r, i, e[o + 5], 4, -378558), i = f(i, a, n, r, e[o + 8], 11, -2022574463),
+        r = f(r, i, a, n, e[o + 11], 16, 1839030562), n = f(n, r, i, a, e[o + 14], 23, -35309556),
+        a = f(a, n, r, i, e[o + 1], 4, -1530992060), i = f(i, a, n, r, e[o + 4], 11, 1272893353),
+        r = f(r, i, a, n, e[o + 7], 16, -155497632), n = f(n, r, i, a, e[o + 10], 23, -1094730640),
+        a = f(a, n, r, i, e[o + 13], 4, 681279174), i = f(i, a, n, r, e[o + 0], 11, -358537222),
+        r = f(r, i, a, n, e[o + 3], 16, -722521979), n = f(n, r, i, a, e[o + 6], 23, 76029189),
+        a = f(a, n, r, i, e[o + 9], 4, -640364487), i = f(i, a, n, r, e[o + 12], 11, -421815835),
+        r = f(r, i, a, n, e[o + 15], 16, 530742520), n = f(n, r, i, a, e[o + 2], 23, -995338651),
+        a = h(a, n, r, i, e[o + 0], 6, -198630844), i = h(i, a, n, r, e[o + 7], 10, 1126891415),
+        r = h(r, i, a, n, e[o + 14], 15, -1416354905), n = h(n, r, i, a, e[o + 5], 21, -57434055),
+        a = h(a, n, r, i, e[o + 12], 6, 1700485571), i = h(i, a, n, r, e[o + 3], 10, -1894986606),
+        r = h(r, i, a, n, e[o + 10], 15, -1051523), n = h(n, r, i, a, e[o + 1], 21, -2054922799),
+        a = h(a, n, r, i, e[o + 8], 6, 1873313359), i = h(i, a, n, r, e[o + 15], 10, -30611744),
+        r = h(r, i, a, n, e[o + 6], 15, -1560198380), n = h(n, r, i, a, e[o + 13], 21, 1309151649),
+        a = h(a, n, r, i, e[o + 4], 6, -145523070), i = h(i, a, n, r, e[o + 11], 10, -1120210379),
+        r = h(r, i, a, n, e[o + 2], 15, 718787259), n = h(n, r, i, a, e[o + 9], 21, -343485551),
+        a = m(a, l), n = m(n, s), r = m(r, u), i = m(i, p);
+    return Array(a, n, r, i);
+}
+
+function uu(e, t, a, n, r, i) {
+    return m(p(m(m(t, e), m(n, i)), r), a);
+}
+
+function d(e, t, a, n, r, i, o) {
+    return uu(t & a | ~t & n, e, t, r, i, o);
+}
+
+function c(e, t, a, n, r, i, o) {
+    return uu(t & n | a & ~n, e, t, r, i, o);
+}
+
+function f(e, t, a, n, r, i, o) {
+    return uu(t ^ a ^ n, e, t, r, i, o);
+}
+
+function h(e, t, a, n, r, i, o) {
+    return uu(a ^ (t | ~n), e, t, r, i, o);
+}
+
+function m(e, t) {
+    var a = (65535 & e) + (65535 & t),
+        n = (e >> 16) + (t >> 16) + (a >> 16);
+    return n << 16 | 65535 & a;
+}
+
+function p(e, t) {
+    return e << t | e >>> 32 - t;
+}
+
+function bb(e) {
+    var t, a = Array(),
+        n = (1 << o) - 1;
+    for (t = 0; t < e.length * o; t += o)
+        a[t >> 5] |= (e.charCodeAt(t / o) & n) << t % 32;
+    return a;
+}
+
+function _(e) {
+    var t, a = "0123456789abcdef",
+        n = "";
+    for (t = 0; t < 4 * e.length; t++) n += a.charAt(15 & e[t >> 2] >> t % 4 * 8 + 4) + a.charAt(15 & e[t >> 2] >> t % 4 * 8);
+    return n;
+}
+
+function ww(e, t, a) {
+    t || (t = "86109D696C9CC58A504EFE21662DF1B9");
+    var n = e + t + l[a];
+    return _(s(bb(n), n.length * o));
+}
+
+function getRandom(e, t) {
+    return Math.floor(Math.random() * (e - t)) + t;
+}
+
+/*
+获取user-sign
+ */
+function getUserSign(s, t, u) {
+    return (0, ww)(s, t, u)
+}
+

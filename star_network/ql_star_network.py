@@ -69,21 +69,36 @@ class StarNetwork(object):
         return res.text.count('endAt') > 0
 
     def draw(self):
-        res = requests.post('https://api.starnetwork.io/v3/user/checkin', headers=self.headers)
-        # logger.error(res.text)
-        res = requests.get('https://api.starnetwork.io/v3/libra/draw', headers=self.headers)
-        # logger.error(res.text)
-        res = requests.get('https://api.starnetwork.io/v3/auth/user', headers=self.headers)
-        if res.text.count('id') > 0:
-            payload = {"id": res.json()['id'], "action": "draw_boost"}
-            res = requests.post('https://api.starnetwork.io/v3/event/draw', json=encrypt(payload), headers=self.headers)
+        try:
+            res = requests.post('https://api.starnetwork.io/v3/user/checkin', headers=self.headers)
             # logger.error(res.text)
+        except Exception as e:
+            logger.error("{}----令牌签到出错----{}".format(self.email, e))
+        try:
+            res = requests.get('https://api.starnetwork.io/v3/libra/draw', headers=self.headers)
+            # logger.error(res.text)
+        except Exception as e:
+            logger.error("{}----加速抽奖出错----{}".format(self.email, e))
+        try:
+            res = requests.get('https://api.starnetwork.io/v3/auth/user', headers=self.headers)
+            # logger.error(res.text)
+            if res.text.count('{"id":') > 0:
+                payload = {"id": res.json()['id'], "action": "draw_boost"}
+                res = requests.post('https://api.starnetwork.io/v3/event/draw', json=encrypt(payload),
+                                    headers=self.headers)
+                # logger.error(res.text)
+        except Exception as e:
+            logger.error("{}----令牌抽奖出错----{}".format(self.email, e))
 
 
 def task(star, lock):
-    if star.login():
-        star.start()
-        star.draw()
+    try:
+        if star.login():
+            star.start()
+            star.draw()
+    except Exception as e:
+        logger.error('{}---出现错误----{}'.format(star.email, e))
+
     lock.acquire()
     if star.success:
         global success_count
