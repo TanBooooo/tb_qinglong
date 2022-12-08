@@ -1212,9 +1212,7 @@ async function getYjjHtml() {
                 'Accept-Encoding': 'gzip, deflate, br'
             }
         };
-        options.headers['user-timestamp'] = Date.now()
-        options.headers['user-random'] = getRandom(0, 31)
-        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
+
         if (debug) {
             log(`\n【debug】=============== 这是 疯狂摇奖机 请求 url ===============`);
             log(JSON.stringify(options));
@@ -3683,11 +3681,8 @@ async function qhbCreditsCost(baseUrl) {
             //     is_from_share: '1',
             //     _t: timestampMs()
             // }
-            data: 'credits=' + exchangeOneCodeConsumeCredits + '&orderId=' + qhbOrderId + '&toActionId=exchange&toPlaywayId=game&desc=exchange_consume_credits_desc&exchangeCodeCount=1&token=' + token + '&user_type=1&is_from_share=1&_t=' + timestampMs()
+            data: 'toPlaywayId=game&toActionId=exchange&desc=exchange_consume_credits_desc&credits=' + exchangeOneCodeConsumeCredits + '&orderId=' + qhbOrderId + '&user_type=1&is_from_share=1&_t=' + timestampMs()
         };
-        options.headers['user-timestamp'] = Date.now()
-        options.headers['user-random'] = getRandom(0, 31)
-        options.headers['user-sign'] = getUserSign(options.headers['user-timestamp'], kwwUid, options.headers['user-random'])
         if (debug) {
             log(`\n【debug】=============== 这是 抢红包扣积分 请求 url ===============`);
             log(JSON.stringify(options));
