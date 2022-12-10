@@ -2284,63 +2284,24 @@ async function finishQgy(num) {
     await getTokenStr(baseUrl);
     await $.wait(2000);
     await queryQgyTask(baseUrl);
-    if (qgyTaskData.length == 0) {
+    if (qgyTaskData.length === 0) {
         log(`账号【${num}】获取青果园任务异常！`);
     } else {
-        for (var i in qgyTaskData) {
-            var id = qgyTaskData[i]["id"];
-            var taskCode = qgyTaskData[i]["code"];
-            var title = qgyTaskData[i]["title"];
-            var taskStatus = parseInt(qgyTaskData[i]["taskStatus"]);
-            if (taskStatus == 2) {
-                log(`任务【${title}】已经完成了！`);
-            } else {
-                switch (id) {
-                    case 'y1z0wktv':
-                        //出门旅行
-                        if (!isTravelling) {
-                            try {
-                                log(`准备去完成【${title}】`);
-                                await getTokenStr(baseUrl);
-                                await $.wait(2000);
-                                qgyToken = dealToken(tokenStr, tokenKeyStr);
-                                await $.wait(2000);
-                                await startTravel(baseUrl, qgyToken);
-                                await $.wait(2000);
-                            } catch (e) {
-                                log(`账号【${num}】青果园旅行异常！${e}`);
-                            }
-                        } else {
-                            log(`正在旅行中....`);
-                        }
-                        break;
-                    case '9pc7awxr':
-                    case 'fn473yer':
-                    case '494cc96q':
-                    case 'qyksf6pq':
-                    case 'ozzl0eqx':
-                    case 'dnv1dbct':
-                    case 'yaavhjoi':
-                        //完成任务
-                        log(`准备去完成【${title}】`);
-                        try {
-                            await getTokenStr(baseUrl);
-                            await $.wait(2000);
-                            qgyToken = dealToken(tokenStr, tokenKeyStr);
-                            await $.wait(2000);
-                            await finishBrowseInfoTask(baseUrl, qgyToken, taskCode, title);
-                            await $.wait(2000);
-                            await newRewardInfo(baseUrl);
-                        } catch (e) {
-                            log(`账号【${num}】青果园${title}异常！${e}`);
-                        }
-                        break;
-                    default:
-                        log(`【${title}】不支持自动完成！`)
-                        break;
-                }
+        //出门旅行
+        if (!isTravelling) {
+            try {
+                log(`准备去完成【${title}】`);
+                await getTokenStr(baseUrl);
+                await $.wait(2000);
+                qgyToken = dealToken(tokenStr, tokenKeyStr);
+                await $.wait(2000);
+                await startTravel(baseUrl, qgyToken);
+                await $.wait(2000);
+            } catch (e) {
+                log(`账号【${num}】青果园旅行异常！${e}`);
             }
-
+        } else {
+            log(`正在旅行中....`);
         }
     }
 
@@ -3909,7 +3870,7 @@ async function answerStart(baseUrl) {
         axios.request(options).then(function (response) {
             try {
                 var data = response.data;
-                data = {"code":null,"data":126795461,"message":null,"success":true}
+                data = {"code": null, "data": 126795461, "message": null, "success": true}
                 if (debug) {
                     log(`\n\n【debug】===============这是 开始答题 返回data==============`);
                     log(data)
