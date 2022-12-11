@@ -1,9 +1,8 @@
 """
-cron: 0 0 0/5 * * ?
-new Env('StarNetwork养号')
+cron: 0 0 0/12 * * ?
+new Env('StarNetwork挖矿')
 """
 
-import hashlib
 import logging
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -15,10 +14,10 @@ from notify import send
 
 file_name = 'StarNetwork'
 thread_name = 'Star_ThreadNum'
-application_name = 'StarNetwork养号'
+application_name = 'StarNetwork挖矿'
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(lineno)d %(message)s",
+    format="%(asctime)s %(levelname)s %(message)s",
     datefmt="%H:%M:%S"
 )
 logger = logging.getLogger(application_name)
@@ -29,16 +28,6 @@ login_fail_msg = []
 start_fail_msg = []
 sign_fail_msg = []
 signing_count = 0
-sss = []
-
-
-def encrypt(payload):
-    timestamp = int(time.time() * 1000)
-    data = (str(payload) + ':D7C92C3FDB52D54147B668DC6F8A5@' + str(timestamp)).replace("'", '"').encode()
-    sign = hashlib.md5(data).hexdigest()
-    payload['timestamp'] = timestamp
-    payload['hash'] = sign
-    return payload
 
 
 class StarNetwork(object):

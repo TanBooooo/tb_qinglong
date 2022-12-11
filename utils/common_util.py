@@ -26,8 +26,17 @@ def load_file(file_name):
     return lines
 
 
+# 读取文本
+def write_file(file_name, text, append = False):
+    mode = 'w+'
+    if append:
+        mode = 'a+'
+    with open(sys.path[0] + "/" + file_name + ".txt", mode) as f:
+        f.write(text)
+
+
 # 获取线程数
-def get_thread_number(thread_name):
+def get_thread_number(thread_name, size):
     thread_num = 5
     try:
         if thread_name in os.environ and len(os.environ[thread_name]) > 0:
@@ -37,4 +46,13 @@ def get_thread_number(thread_name):
             logger.info("暂未设置线程数，默认数量{}".format(thread_num))
     except Exception:
         logger.info("线程池数量获取出错，设置默认数量{}".format(thread_num))
+
+    if thread_num > size:
+        thread_num = size
+        logger.info("线程数量大于文本数量，设置文本数量{}".format(size))
+
+    if thread_num < 1:
+        thread_num = 1
+        logger.info("线程数量不能小于0，设置默认数量1")
+
     return thread_num

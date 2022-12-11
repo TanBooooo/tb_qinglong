@@ -87,11 +87,7 @@ def task(sidra, lock):
 
 if __name__ == '__main__':
     lines = load_file(file_name)
-    thread_num = get_thread_number(thread_name)
-    if thread_num > len(lines):
-        thread_num = len(lines)
-    if thread_num < 1:
-        thread_num = 1
+    thread_num = get_thread_number(thread_name, len(lines))
 
     lock = threading.RLock()
     pool = ThreadPoolExecutor(max_workers=thread_num)
