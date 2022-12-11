@@ -1,5 +1,5 @@
 """
-cron: 0 4 0/5 * * ?
+cron: 0 0 4/5 * * ?
 new Env('StarNetwork抽奖')
 """
 
@@ -11,7 +11,6 @@ from concurrent.futures import ThreadPoolExecutor
 import requests
 
 from utils.common_util import load_file, get_thread_number
-from notify import send
 from utils.star_network_util import encrypt
 
 thread_name = 'Star_ThreadNum'

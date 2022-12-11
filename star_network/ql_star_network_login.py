@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 import requests
 
-from utils.common_util import load_file, get_thread_number, write_file
+from utils.common_util import load_file, get_thread_number, write_file, del_file
 from notify import send
 from utils.star_network_util import encrypt
 
@@ -67,6 +67,7 @@ def task(index, email, password, lock):
 if __name__ == '__main__':
     logger.info("=====开始执行读取文本=====")
     lines = load_file(file_name)
+    del_file(file_name + 'Token')
     logger.info("=====读取文本执行完毕=====\n")
 
     logger.info("=====开始执行登录任务=====")

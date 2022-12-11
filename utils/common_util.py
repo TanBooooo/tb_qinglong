@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+import time
 
 logging.basicConfig(
     level=logging.INFO,
@@ -14,6 +15,10 @@ logger = logging.getLogger('通用工具')
 def load_file(file_name):
     count = 0
     lines = []
+    while os.path.exists(file_name + ".txt") is False:
+        logger.info("不存在{}文件，1秒后重试".format(file_name + ".txt"))
+        time.sleep(1)
+
     logger.info("正在读取{}文本信息".format(file_name))
     with open(sys.path[0] + "/" + file_name + ".txt", "r+") as f:
         while True:
@@ -27,12 +32,23 @@ def load_file(file_name):
 
 
 # 读取文本
-def write_file(file_name, text, append = False):
+def write_file(file_name, text, append=False):
     mode = 'w+'
     if append:
         mode = 'a+'
     with open(sys.path[0] + "/" + file_name + ".txt", mode) as f:
         f.write(text)
+
+
+# 删除文本
+def del_file(file_name):
+    if os.path.isfile(file_name + ".txt"):
+        try:
+            os.remove(file_name + ".txt")  # 这个可以删除单个文件，不能删除文件夹
+        except BaseException as e:
+            logger.info("文件删除失败:{}".format(e))
+    else:
+        logger.error("{}不是一个文件".format(file_name + ".txt"))
 
 
 # 获取线程数
