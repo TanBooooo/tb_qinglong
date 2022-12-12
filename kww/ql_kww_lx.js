@@ -2283,31 +2283,98 @@ async function finishQgy(num) {
     await getQgyInfo(baseUrl);
     await getTokenStr(baseUrl);
     await $.wait(2000);
+    await qgyCheckQuery(baseUrl);
+    await $.wait(2000);
+    if (qgySignFlag) {
+        log(`账号【${num}】青果园已经签到了！`);
+    } else {
+        try {
+            await getTokenStr(baseUrl);
+            await $.wait(2000);
+            qgyToken = dealToken(tokenStr, tokenKeyStr);
+            await $.wait(2000);
+            await qgyCreateItem(baseUrl, qgyToken)
+            await delay();
+            await getTokenStr(baseUrl);
+            await $.wait(2000);
+            qgyToken = dealToken(tokenStr, tokenKeyStr);
+            await qgySign(baseUrl, qgyToken);
+            await getTokenStr(baseUrl);
+            await $.wait(2000);
+            qgyToken = dealToken(tokenStr, tokenKeyStr);
+            if (currentStatusHaveMillis == currentStatusNeedMillis) {
+                await collectCoconut(baseUrl, qgyToken)
+            }
+        } catch (e) {
+            log(`账号【${num}】青果园签到异常！${e}`);
+        }
+
+    }
     await queryQgyTask(baseUrl);
-    if (qgyTaskData.length === 0) {
+    if (qgyTaskData.length == 0) {
         log(`账号【${num}】获取青果园任务异常！`);
     } else {
-        //出门旅行
-        if (!isTravelling) {
-            try {
-                log(`准备去完成【${title}】`);
-                await getTokenStr(baseUrl);
-                await $.wait(2000);
-                qgyToken = dealToken(tokenStr, tokenKeyStr);
-                await $.wait(2000);
-                await startTravel(baseUrl, qgyToken);
-                await $.wait(2000);
-            } catch (e) {
-                log(`账号【${num}】青果园旅行异常！${e}`);
+        for (var i in qgyTaskData) {
+            var id = qgyTaskData[i]["id"];
+            var taskCode = qgyTaskData[i]["code"];
+            var title = qgyTaskData[i]["title"];
+            var taskStatus = parseInt(qgyTaskData[i]["taskStatus"]);
+            if (taskStatus == 2) {
+                log(`任务【${title}】已经完成了！`);
+            } else {
+                switch (id) {
+                    case 'y1z0wktv':
+                        //出门旅行
+                        if (!isTravelling) {
+                            try {
+                                log(`准备去完成【${title}】`);
+                                await getTokenStr(baseUrl);
+                                await $.wait(2000);
+                                qgyToken = dealToken(tokenStr, tokenKeyStr);
+                                await $.wait(2000);
+                                await startTravel(baseUrl, qgyToken);
+                                await $.wait(2000);
+                            } catch (e) {
+                                log(`账号【${num}】青果园旅行异常！${e}`);
+                            }
+                        } else {
+                            log(`正在旅行中....`);
+                        }
+                        break;
+                    case '9pc7awxr':
+                    case 'fn473yer':
+                    case '494cc96q':
+                    case 'qyksf6pq':
+                    case 'ozzl0eqx':
+                    case 'dnv1dbct':
+                    case 'yaavhjoi':
+                        //完成任务
+                        log(`准备去完成【${title}】`);
+                        try {
+                            await getTokenStr(baseUrl);
+                            await $.wait(2000);
+                            qgyToken = dealToken(tokenStr, tokenKeyStr);
+                            await $.wait(2000);
+                            await finishBrowseInfoTask(baseUrl, qgyToken, taskCode, title);
+                            await $.wait(2000);
+                            await newRewardInfo(baseUrl);
+                        } catch (e) {
+                            log(`账号【${num}】青果园${title}异常！${e}`);
+                        }
+                        break;
+                    default:
+                        log(`【${title}】不支持自动完成！`)
+                        break;
+                }
             }
-        } else {
-            log(`正在旅行中....`);
+
         }
     }
 
     await getTokenKeyStr(baseUrl);
     await $.wait(2000);
     await getQgyInfo(baseUrl);
+
     if (qgyProcess !== 'NaN%') {
         log('====能量加速====')
         if (leftEnergyBall > 0) {
