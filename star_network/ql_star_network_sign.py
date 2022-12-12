@@ -1,5 +1,5 @@
 """
-cron: 0 10 2/5 * * ?
+cron: 0 0 4/5 * * ?
 new Env('StarNetwork签到')
 """
 

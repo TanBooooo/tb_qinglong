@@ -1,5 +1,5 @@
 """
-cron: 0 0 4/5 * * ?
+cron: 0 0 2/5 * * ?
 new Env('StarNetwork抽奖')
 """
 
