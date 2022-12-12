@@ -178,9 +178,9 @@ let o = 8
             log(`\n==== 天降好礼 ====\n`)
             await finishTj(num);
             await $.wait(3000)
-            log(`\n==== 青果园 ====\n`);
-            await finishQgy(num);
-            await $.wait(3000)
+            // log(`\n==== 青果园 ====\n`);
+            // await finishQgy(num);
+            // await $.wait(3000)
             log(`\n==== 抢兑红包 ====\n`);
             await finishQhd(num);
             await $.wait(3000)

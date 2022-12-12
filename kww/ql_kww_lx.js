@@ -3043,7 +3043,7 @@ async function startTravel(baseUrl, token) {
                 'Accept-Language': 'zh-CN,zh-Hans;q=0.9'
             },
             // data: {token: token, user_type: '1', is_from_share: '1', _t: timestampMs()}
-            data: "token: " + token + "&user_type=1&is_from_share=1&_t=" + timestampMs()
+            data: "token=" + token + "&user_type=1&is_from_share=1&_t=" + timestampMs()
         };
 
         if (debug) {
