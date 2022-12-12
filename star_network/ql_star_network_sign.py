@@ -37,17 +37,18 @@ def task(index, email, token, lock):
     exception = None
     for i in range(0, 3):
         try:
-            resp = requests.get('https://api.starnetwork.io/v3/user/checkin', headers=headers, timeout=10)
-            if resp.json()['checkins'][0] is not None and resp.json()['checkins'][0] != '':
+            resp = requests.post('https://api.starnetwork.io/v3/user/checkin', headers=headers, timeout=10)
+            logger.info("{}--post--{}".format(email, resp.text))
+            if resp.text.count('CLAIMED') != 0:
+                global success_count
+                success_count = success_count + 1
+            elif resp.text.count('404') > 0 and resp.text.count('NotFoundError') > 0:
                 global wait_count
                 wait_count = wait_count + 1
             else:
-                resp = requests.post('https://api.starnetwork.io/v3/user/checkin', headers=headers, timeout=10)
-                if resp.text.count('CLAIMED') == 0:
-                    fail_email.append("签到失败----{}----{}".format(email, resp.text))
-                else:
-                    global success_count
-                    success_count = success_count + 1
+                exception = resp.text
+                resp = None
+                continue
             break
         except Exception as ex:
             if i != 2:
