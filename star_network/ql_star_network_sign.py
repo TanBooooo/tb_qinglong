@@ -38,7 +38,6 @@ def task(index, email, token, lock):
     for i in range(0, 3):
         try:
             resp = requests.post('https://api.starnetwork.io/v3/user/checkin', headers=headers, timeout=10)
-            logger.info("{}--post--{}".format(email, resp.text))
             if resp.text.count('CLAIMED') != 0:
                 global success_count
                 success_count = success_count + 1

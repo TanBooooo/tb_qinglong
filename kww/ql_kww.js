@@ -164,8 +164,8 @@ let o = 8
                 await readSubmit();
                 await $.wait(2000);
             }
-            log(`\n==== 竞猜足球 ====\n`);
-            await finishJc(num)
+            // log(`\n==== 竞猜足球 ====\n`);
+            // await finishJc(num)
             log(`\n==== 每日答题 ====\n`);
             await finishDt(num);
             await $.wait(3000)
@@ -1994,11 +1994,9 @@ async function finishTj(num) {
     var baseUrl = tjUrl.replace(urlMatch[0], '');
     var activityId = getQueryString(tjUrl, "id");
     await getTjInfo(baseUrl, activityId);
-    if (remainJoinTimes == 0) {
-        log(`账号【${num}】天降好礼免费次数为0，不执行！`);
-        return false;
-    } else {
-        await getTjHtml(activityId);
+
+
+    await getTjHtml(activityId);
         await $.wait(2000);
         for (var i = 1; i <= remainJoinTimes; i++) {
             log(`开始第${i}次天降好礼游戏！`);
@@ -2013,7 +2011,28 @@ async function finishTj(num) {
             }
         }
 
-    }
+
+
+    // if (remainJoinTimes == 0) {
+    //     log(`账号【${num}】天降好礼免费次数为0，不执行！`);
+    //     return false;
+    // } else {
+    //     await getTjHtml(activityId);
+    //     await $.wait(2000);
+    //     for (var i = 1; i <= remainJoinTimes; i++) {
+    //         log(`开始第${i}次天降好礼游戏！`);
+    //         await doTjJoin(baseUrl, activityId);
+    //         if (tjRecordId == '') {
+    //             log(`第${i}次天降好礼游戏失败！`);
+    //         } else {
+    //             await $.wait(40000);
+    //             await tjSubmit(baseUrl, activityId);
+    //             await $.wait(3000);
+    //             await tjOrderStatus(baseUrl);
+    //         }
+    //     }
+    //
+    // }
     return true;
 }
 
@@ -2185,7 +2204,7 @@ async function tjSubmit(baseUrl, activityId) {
         let url = baseUrl + 'submit';
         let host = (baseUrl.split('//')[1]).split('/')[0];
         var timestamp = timestampMs();
-        var score = randomInt(20, 25) + "";
+        var score = randomInt(200, 250) + "";
         var sign = md5("".concat(score).concat(timestamp).concat(timestamp.toString(16)));
         var key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1JdBGmK6g6yj3w5YDNCvDL2SjnJMSUExcfYY9fOd2ZOTyzh6suMfR5vBAyBGsolKUmUqh6blqOeNApSKJhkEWMhxG3eERZZYwmtUCRkH1WDQkA/dSuBOnFHQ4sjoMdTuv80j5TNVMtV7qDVEp0XF+muYLuA3tXGgrYVQu8iLAH0kqr9T2u/a6We8qhgvE6ddKxMLyEz3sRnWShioTl/FmjaqCiU3NHNPL8DztEnpsGreq66vp4wPG8Q6UfGHdDiDx+/xJrYDkfnoX0u/OpSxqL8sCHvrmj8fHlptnwy2sgwhREyChWH1JZLV2RWJhOJ63PfnlH7BvqLke2qWLM9YAwIDAQAB";
         jsencrypt.setPublicKey(key);
@@ -3983,6 +4002,7 @@ async function answerStart(baseUrl) {
         axios.request(options).then(function (response) {
             try {
                 var data = response.data;
+
                 if (debug) {
                     log(`\n\n【debug】===============这是 开始答题 返回data==============`);
                     log(data)
