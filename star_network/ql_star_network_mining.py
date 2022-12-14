@@ -1,5 +1,5 @@
 """
-cron: 0 0 1/12 * * ?
+cron: 0 0 1/1 * * ?
 new Env('StarNetwork挖矿')
 """
 
