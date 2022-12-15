@@ -2204,7 +2204,7 @@ async function tjSubmit(baseUrl, activityId) {
         let url = baseUrl + 'submit';
         let host = (baseUrl.split('//')[1]).split('/')[0];
         var timestamp = timestampMs();
-        var score = randomInt(200, 250) + "";
+        var score = randomInt(20, 30) + "";
         var sign = md5("".concat(score).concat(timestamp).concat(timestamp.toString(16)));
         var key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1JdBGmK6g6yj3w5YDNCvDL2SjnJMSUExcfYY9fOd2ZOTyzh6suMfR5vBAyBGsolKUmUqh6blqOeNApSKJhkEWMhxG3eERZZYwmtUCRkH1WDQkA/dSuBOnFHQ4sjoMdTuv80j5TNVMtV7qDVEp0XF+muYLuA3tXGgrYVQu8iLAH0kqr9T2u/a6We8qhgvE6ddKxMLyEz3sRnWShioTl/FmjaqCiU3NHNPL8DztEnpsGreq66vp4wPG8Q6UfGHdDiDx+/xJrYDkfnoX0u/OpSxqL8sCHvrmj8fHlptnwy2sgwhREyChWH1JZLV2RWJhOJ63PfnlH7BvqLke2qWLM9YAwIDAQAB";
         jsencrypt.setPublicKey(key);
